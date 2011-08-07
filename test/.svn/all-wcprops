@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/data-services/!svn/ver/36985/pipeline-bob/trunk/pydbcopy/src/test/python/pydbcopy/test
+END
+pydbcopytest.py
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/data-services/!svn/ver/36985/pipeline-bob/trunk/pydbcopy/src/test/python/pydbcopy/test/pydbcopytest.py
+END
+dbutilstest.py
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/data-services/!svn/ver/36985/pipeline-bob/trunk/pydbcopy/src/test/python/pydbcopy/test/dbutilstest.py
+END
