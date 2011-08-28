@@ -10,7 +10,7 @@ import logging
 
 logger = multiprocessing.get_logger()
 
-def main():
+def main(argv=None):
     """
         This is the main routine for pydbcopy. Pydbcopy copies a set of tables from one 
         database (possibly remote) to a local database. If possible an incremental copy is 
@@ -25,8 +25,11 @@ def main():
         for debugging (see the --debug option in the usage). Pydbcopy will use a number of processes 
         equal to the number of cpus detected on the system minus one.
     """
+    if argv is None:
+        argv = sys.argv
+        
     parser = get_option_parser()
-    options = parser.parse_args()[0]
+    options = parser.parse_args(argv[1:])[0]
     
     if options.properties:
         settings.read_properties(options.properties)
@@ -60,6 +63,11 @@ def main():
     if options.verbose is not None and options.verbose is True:
         settings.verbosity = 1
         
+    # check that we have a list of tables to copy
+    if len(settings.tables) == 0:
+        sys.stderr.write("Error: No tables specified.\n")
+        return 1
+        
     # check that user specified dump dir is readable/writable by all
     if not os.path.isdir(settings.dump_dir):
         os.makedirs(settings.dump_dir)
@@ -71,12 +79,11 @@ def main():
             sys.stderr.write("Warning: unable to chmod 777 on '%s'. Pydbcopy may not be able to clean up after itself!\n" \
                              % settings.dump_dir)
             pass
-
         
     if not os.access(settings.dump_dir, os.F_OK | os.R_OK | os.W_OK):
         sys.stderr.write("Error: unable to find or create a writable dump dir at '%s'\n" \
                          % settings.dump_dir)
-        sys.exit(1)
+        return 1
     
     # Configure the logging
     ch = logging.StreamHandler(sys.stdout)
@@ -120,9 +127,9 @@ def main():
     logger.info('--------------------------------------')
     
     if len(invalid_tables) > 0 or len(failed_tables) > 0:
-        sys.exit(-1)
+        return -1
     
-    sys.exit(0)
+    return 0
 
 def verify_and_copy_table(table):
     """
@@ -513,7 +520,7 @@ def get_option_parser():
  
 if __name__ == '__main__':
     try:
-        main()
+        sys.exit(main())
     except KeyboardInterrupt:
         sys.stderr.write('\nCancelled by keyboard interrupt.\n')
         sys.exit(1)

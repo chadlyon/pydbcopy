@@ -25,7 +25,7 @@ class MySQLHostTest(unittest.TestCase):
     """
     
     def setUp(self):
-        settings.read_properties("../../../resources/pydbcopy.properties")
+        settings.read_properties("pydbcopy.conf")
 
         self.source_host = MySQLHost(settings.source_host, settings.source_user, \
                                      settings.source_password, settings.source_database)
@@ -88,7 +88,7 @@ class MySQLHostTest(unittest.TestCase):
         
         c.execute("create table if not exists tmp_pydbcopy_test ( id integer primary key, test_string varchar(50) )")
         
-        filename = "../../../resources/fixtures/testLoadDataInFile.csv"
+        filename = "fixtures/testLoadDataInFile.csv"
         
         self.dest_host.load_data_in_file("tmp_pydbcopy_test", filename)
 
